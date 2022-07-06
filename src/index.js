@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 mongoose.connect("mongodb+srv://disha123:hl6LMcJIED1eCZhr@cluster0.hrerz.mongodb.net/group32Database", { 
     useNewUrlParser: true
 })
-.then( () => console.log("MongoDb is connected succsessfully"))
+.then( () => console.log("MongoDb is connected..."))
 .catch ( err => console.log(err) )
 
 app.use('/', route);
