@@ -1,14 +1,15 @@
 const express = require('express');
 const router = express.Router();
-//const collegeController = require("../controllers/collegeController")
-// const internController = require("../controllers/internController")
-
-router.get("/test-me", function (req, res) {
-    res.send("My first ever api!")
-})
+const userController = require("../controllers/userController")
 
 
-// router.post("/functionup/colleges", collegeController.createCollege)
+// router.get("/test-me", function (req, res) {
+//     res.send("My first ever api!")
+// })
+
+
+ router.post("/register", userController.createUser)
+ router.post("/login", userController.logIn)
 
 // router.post("/functionup/interns",internController.createIntern)
 
