@@ -78,22 +78,8 @@ By category
 By subcategory example of a query url: books?filtername=filtervalue&f2=fv2
 Return all books sorted by book name in Alphabatical order
 
-GET /books/:bookId
-Returns a book with complete details including reviews. Reviews array would be in the form of Array. Response example here
-Return the HTTP status 200 if any documents are found. The response structure should be like this
-If the book has no reviews then the response body should include book detail as shown here and an empty array for reviewsData.
-If no documents are found then return an HTTP status 404 with a response like this
 
-PUT /books/:bookId
-Update a book by changing its
-title
-excerpt
-release date
-ISBN
-Make sure the unique constraints are not violated when making the update
-Check if the bookId exists (must have isDeleted false and is present in collection). If it doesn't, return an HTTP status 404 with a response body like this
-Return an HTTP status 200 if updated successfully with a body like this
-Also make sure in the response you return the updated book document.
+
 
 DELETE /books/:bookId
 Check if the bookId exists and is not deleted. If it does, mark it deleted and return an HTTP status 200 with a response body with status and message.
