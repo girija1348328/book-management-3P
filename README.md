@@ -1,3 +1,10 @@
+<<<<<<< HEAD
+
+# book_management
+3rd project of functionUp
+Radon
+
+
 Project - Books Management
 Key points
 Create a group database groupXDatabase. You can clean the db you previously used and resue that.
@@ -265,5 +272,4 @@ Book details response no reviews
     "createdAt": "2021-09-17T04:25:07.803Z",
     "updatedAt": "2021-09-17T04:25:07.803Z",
     "reviewsData": []
-  }
-}
+ }

@@ -1,3 +1,4 @@
+
 const mongoose = require('mongoose');
 
 const isValidRequestBody = function (requestBody) {
@@ -7,7 +8,6 @@ const isValidRequestBody = function (requestBody) {
 const valid = function (value) {
 
     if (typeof (value) === 'undefined' || value === null) return false
-   
     if (typeof (value) === "string" && value.trim().length == 0) return false
 
     return true
@@ -15,12 +15,29 @@ const valid = function (value) {
 
 const isValidObjectId = (ObjectId) => {
     return mongoose.Types.ObjectId.isValid(ObjectId);   // to validate a MongoDB ObjectId we are use .isValid() method on ObjectId
-  };
+};
 
 
-  let isbnRegex = (ISBN) =>{
-  return (/^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/.test(ISBN.trim()) 
-  )
+const isValidEmail = function (value) {
+    if (/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/.test(value)) { return true }
+    else return false
+
+}
+
+const isValidPassword = function (value) {
+    if (/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,15}$/.test(value)) { return true }
+    else return false
+}
+
+
+const moblieRegex = function (mobile) {
+    let regex = /^(?:(?:\+|0{0,2})91(\s*|[\-])?|[0]?)?([6789]\d{2}([ -]?)\d{3}([ -]?)\d{4})$/
+    return regex.test(mobile)
+}
+
+
+let isbnRegex = (ISBN) => {
+    return (/^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/.test(ISBN.trim()))
 
 }
 let isREgexName = function (attribute) {
@@ -32,4 +49,7 @@ let regexSpaceChar = function (attribute) {
 }
 
 
-module.exports ={isValidRequestBody, valid,isbnRegex, isREgexName,regexSpaceChar,isValidObjectId}
+module.exports = { isValidRequestBody, valid, isbnRegex, isREgexName, regexSpaceChar, isValidObjectId, isValidEmail, isValidPassword, moblieRegex }
+
+
+
