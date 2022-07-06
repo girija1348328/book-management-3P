@@ -9,10 +9,11 @@ let isValidTitle = function (title) {
 const createUser = async function (req, res) {
     try {
         let data = req.body
+        if(!validator.isValidRequestBody(data) ) return res.status(400).send({ status: false, message: "data in request body is required" }); 
         //title
         if (!data.title) return res.status(400).send({ status: false, message: "title is required" });
 
-        if (!validator.isValidTitle(data.title)) {
+        if (!isValidTitle(data.title)) {
             return res.status(400).send({ status: false, message: "Invalid request parameters in the title, It should be Mr, Mrs, Miss" })
         }
 
@@ -23,13 +24,16 @@ const createUser = async function (req, res) {
         //phoneNum
         if (!data.phone) return res.status(400).send({ status: false, message: "phone-number is required" });
         if (!validator.moblieRegex(data.phone)) return res.status(400).send({ status: false, message: "please provide the mobile number in a valid format..." })
+        const checkPhone = await userModel.findOne({ phone:phone })
+        if (checkPhone) res.status(400).send({ status: false, message: "This phone no. already exists" })
+
 
 
         //email
         if (!data.email) return res.status(400).send({ status: false, message: "email is required" });
         if (!validator.isValidEmail(data.email)) return res.status(400).send({ status: false, message: `this mail is not valid ::${email}` }) //template literal
         const find = await userModel.findOne({ email: data.email })
-        if (find) res.status(404).send({ status: false, message: "This email already exists" })
+        if (find) res.status(400).send({ status: false, message: "This email already exists" })
 
         //password
         if (!data.password) return res.status(400).send({ status: false, message: "password is required" });
@@ -43,9 +47,9 @@ const createUser = async function (req, res) {
 
 
         const CreatedData = await userModel.create(data)
-        res.status(201).send({ msg: CreatedData })
+       return res.status(201).send({status: true, message:"success",data: CreatedData })
     } catch (err) {
-        res.status(500).send({ msg: err.message })
+        return  res.status(500).send({status: false, msg: err.message })
     }
 }
 
@@ -83,7 +87,7 @@ const logIn = async function (req, res) {
         res.status(200).send({ status: true, message: "Login successful", token: token });
     }
     catch (err) {
-        res.status(500).send({ message: err.message })
+        res.status(500).send({ status:false,message: err.message })
     }
 
 
