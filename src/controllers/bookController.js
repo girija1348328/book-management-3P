@@ -102,6 +102,10 @@ const getBooksById = async function (req, res){
     try {
 
         let filter = req.params.bookId
+
+        if (req.params.hasOwnProperty('bookId')) {
+            if (!validator.isValidObjectId(req.params.bookId)) return res.status(400).send({ status: false, message: "please enter the valid BookId...!" })
+        }
         
         let checkBookName = await bookModel.findOne({ _id:filter, isDeleted: false }).select({__v:0}) //Check book Name From DB/
         console.log(checkBookName)
