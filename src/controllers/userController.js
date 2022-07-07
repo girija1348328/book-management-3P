@@ -56,46 +56,7 @@ const createUser = async function (req, res) {
     }
 }
 
-// const logIn = async function (req, res) {
-//     try {
-//         let userName = req.body.email;
-//         let password = req.body.password;
 
-//         // if (!data.email) return res.status(400).send({ status: false, message: "email is required" });
-//         // if (!validator.isValidEmail(data.email)) return res.status(400).send({ status: false, message: `this mail is not valid ::${email}` }) //template literal
-//         // const find = await userModel.findOne({ email: data.email })
-//         // if (find) res.status(404).send({ status: false, msg: `This ${email} already exists` })
-
-//         // //password
-//         // if (!data.password) return res.status(400).send({ status: false, message: "password is required" });
-//         // if (!validator.isValidPassword(data.password)) return res.status(400).send({ message: `Password should be 8 to 15 characters which contain at least one numeric digit, one uppercase and one lowercase letter` })
-
-//         // let user = await userModel.findOne({ email: userName, password: password });
-//         // if (!user) return res.status(404).send({ status: false, message: "username or the password is not correct", });
-
-
-//         //after successfully creation of login jwt token will be created
-
-//         let token = jwt.sign(
-//             {
-//                 userId: user._id.toString(),
-//                 batch: "Radon",
-//                 organisation: "FunctionUp",
-//                 iat: Math.floor(Date.now() / 1000),
-//                 exp: Math.floor(Date.now() / 1000) + 10 * 60 * 60,
-//             },
-//             "Book-Management"
-//         );
-//         res.setHeader("x-api-key", token);
-//         res.status(200).send({ status: true, message: "Login successful", token: token });
-//     }
-//     catch (err) {
-//         res.status(500).send({ status:false,message: err.message })
-//     }
-
-
-
-// }
 
 const logIn = async function (req, res) {
     try{
