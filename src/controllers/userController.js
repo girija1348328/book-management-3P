@@ -3,9 +3,7 @@ const validator = require("../validator/validate")
 const jwt = require("jsonwebtoken");
 
 
-let isValidTitle = function (title) {
-    return ["Mr", "Mrs", "Miss"].indexOf(title) !== -1
-}
+
 const createUser = async function (req, res) {
     try {
         let data = req.body
@@ -13,7 +11,7 @@ const createUser = async function (req, res) {
         //title
         if (!data.title) return res.status(400).send({ status: false, message: "title is required" });
 
-        if (!isValidTitle(data.title)) {
+        if (!validator.isValidTitle(data.title)) {
             return res.status(400).send({ status: false, message: "Invalid request parameters in the title, It should be Mr, Mrs, Miss" })
         }
 
@@ -94,6 +92,4 @@ const logIn = async function (req, res) {
 
 
 
-
-module.exports.logIn = logIn
-module.exports.createUser = createUser
+module.exports= {logIn,createUser}
