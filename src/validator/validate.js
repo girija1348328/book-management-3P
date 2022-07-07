@@ -28,6 +28,9 @@ const isValidPassword = function (value) {
     if (/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,15}$/.test(value)) { return true }
     else return false
 }
+let isValidTitle = function (title) {
+    return ["Mr", "Mrs", "Miss"].indexOf(title) !== -1
+}
 
 
 const moblieRegex = function (mobile) {
@@ -49,7 +52,7 @@ let regexSpaceChar = function (attribute) {
 }
 
 
-module.exports = { isValidRequestBody, valid, isbnRegex, isREgexName, regexSpaceChar, isValidObjectId, isValidEmail, isValidPassword, moblieRegex }
+module.exports = { isValidRequestBody, valid, isbnRegex, isREgexName, regexSpaceChar, isValidObjectId, isValidEmail, isValidPassword,isValidTitle, moblieRegex }
 
 
 

@@ -3,9 +3,7 @@ const validator = require("../validator/validate")
 const jwt = require("jsonwebtoken");
 
 
-let isValidTitle = function (title) {
-    return ["Mr", "Mrs", "Miss"].indexOf(title) !== -1
-}
+
 const createUser = async function (req, res) {
     try {
         let data = req.body
@@ -53,19 +51,16 @@ const logIn = async function (req, res) {
     try {
         let userName = req.body.email;
         let password = req.body.password;
-
-        if (!data.email) return res.status(400).send({ status: false, message: "email is required" });
-        if (!validator.isValidEmail(data.email)) return res.status(400).send({ status: false, message: `this mail is not valid ::${email}` }) //template literal
-        const find = await userModel.findOne({ email: data.email })
-        if (find) res.status(404).send({ status: false, msg: `This ${email} already exists` })
-
-        //password
-        if (!data.password) return res.status(400).send({ status: false, message: "password is required" });
-        if (!validator.isValidPassword(data.password)) return res.status(400).send({ message: `Password should be 8 to 15 characters which contain at least one numeric digit, one uppercase and one lowercase letter` })
-
+    
         let user = await userModel.findOne({ email: userName, password: password });
-        if (!user) return res.status(404).send({ status: false, message: "username or the password is not correct", });
-
+        
+        // if(!userName.password == 0) return res.status(404).send({status: false, msg: "Please enter details"})   // changed by fazan
+    
+        if (!user)
+            return res.status(404).send({
+                status: false,
+                msg: "username or the password is not correct",
+            });
 
         //after successfully creation of login jwt token will be created
 
