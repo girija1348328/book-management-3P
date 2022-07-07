@@ -8,9 +8,9 @@ const createUser = async function (req, res) {
     try {
         let data = req.body
         if(!validator.isValidRequestBody(data) ) return res.status(400).send({ status: false, message: "data in request body is required" }); 
+        
         //title
         if (!data.title) return res.status(400).send({ status: false, message: "title is required" });
-
         if (!validator.isValidTitle(data.title)) {
             return res.status(400).send({ status: false, message: "Invalid request parameters in the title, It should be Mr, Mrs, Miss" })
         }

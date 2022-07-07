@@ -1,6 +1,6 @@
 const moment = require('moment')
 const bookModel = require("../models/bookModel");
-const { off } = require("../models/reviewModel");
+const reviewModel= require("../models/reviewModel");
 const userModel = require("../models/userModel");
 const validator = require("../validator/validate")
 
@@ -71,7 +71,7 @@ const createBook = async function (req, res) {
 }
 
 
-
+//--------------------------------------------getBook_API-----------------------------------------------------------
 
 const getBooks = async function (req, res) {
     try {
@@ -90,12 +90,37 @@ const getBooks = async function (req, res) {
         return res.status(200).send({ status: true, message: 'Books list', data: findBooks })
 
     }
-    catch (err) {
-        res.status(500).send({ msg: err.message })
-    }
+    catch (err) 
+    { return res.status(500).send({ status: false, message: err.message }); }
 };
 
 
+//--------------------------------------------getBook_Param_API-----------------------------------------------------
+
+const getBooksById = async function (req, res){
+
+    try {
+
+        let filter = req.params.bookId
+        
+        let checkBookName = await bookModel.findOne({ _id:filter, isDeleted: false }).select({__v:0}) //Check book Name From DB/
+        console.log(checkBookName)
+        if (!checkBookName) return res.status(404).send({ status: true, message: "No such book Name found" });
+    
+        
+        let getReviewData = await reviewModel.find({ bookId: filter, isDeleted: false }).select({ bookId: 1, reviewedBy: 1, reviewedAt: 1, rating:1, review:1 })
+        if( !getReviewData ) return res.status(404).send({ status: false, message: "no review given to this book" })
+
+      let bookData =checkBookName.toObject();
+      bookData["ReviewsData"]= getReviewData;
+    
+       return res.status(200).send({ status: true, message: "Books list", data:bookData });
+      } catch (err) {
+       return res.status(500).send({ status: false, message: err.message });
+      }
+    };
+
+//------------------------------------------------------upadte_API--------------------------------------------------
 const updateBookByParam = async function (req, res) {
     try {
         let bookId = req.params.bookId
@@ -107,11 +132,12 @@ const updateBookByParam = async function (req, res) {
         //DB call for find Id
         let checkBook = await bookModel.findById({ _id: bookId, isDeleted:false});
         if(!checkBook)  return res.status(404).send({ status: false, message: "No such book found...!" })
-
-        if (checkBook.isDeleted === true) return res.status(400).send({ status: false, message: "book is already deleted...!" });
-        if (!validator.regexSpaceChar(title)) return res.status(400).send({ status: false, message: "book title is required in valid format...!" });
+        
+        //edge case
+        if (checkBook.isDeleted === true) return res.status(400).send({ status: false, message: "YOu can't update book is already deleted...!" });
 
         //title
+        if (!validator.regexSpaceChar(title)) return res.status(400).send({ status: false, message: "book title is required in valid format...!" });
         let checkTitle = await bookModel.findOne({ title: title });
         if (checkTitle) 
         return res.status(400).send({ status: false, message: " Book is already exist, Enter new book name...!" })
@@ -131,7 +157,7 @@ const updateBookByParam = async function (req, res) {
         requestBody.releasedAt =  date
 
 
-        
+        //Update part
         if (checkBook.isDeleted === false) {   //condtion here we wants to perform
 
             const updateBook = await bookModel.findOneAndUpdate(
@@ -147,10 +173,8 @@ const updateBookByParam = async function (req, res) {
                 { new: true, upsert: true })
 
             res.status(200).send({ Status: true, message: "Success", Data: updateBook })
-console.log(updateBook);
+
         }
-
-
     } catch (err) {
         return res.status(500).send({ status: false, message: err.message })
 
@@ -159,14 +183,16 @@ console.log(updateBook);
 
 
 
-
+//------------------------------------------------------upadte_API--------------------------------------------------
 const deleteBookByParam = async function (req, res) {
     try {
         let bookId1 = req.params.bookId;
-        let checkBook = await bookModel.findById({ _id: bookId1 })
 
+        //DB call
+        let checkBook = await bookModel.findById({ _id: bookId1 })
         if (!checkBook)
             return res.status(404).send({ status: false, data: "no such blog exist " })
+
 
         if (checkBook.isDeleted == true)
             return res.status(400).send({ status: false, data: "book is already deleted...!" })
@@ -190,4 +216,4 @@ const deleteBookByParam = async function (req, res) {
 
 }
 
-module.exports = { createBook, getBooks, deleteBookByParam, updateBookByParam }
+module.exports = { createBook, getBooks, deleteBookByParam, updateBookByParam,getBooksById }
