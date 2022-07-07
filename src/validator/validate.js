@@ -45,7 +45,7 @@ let isREgexName = function (attribute) {
 }
 
 let regexSpaceChar = function (attribute) {
-    return (/^[A-Za-z\s]{1,}[\,]{0,1}[A-Za-z\s]{0,}$/.test(attribute.trim()))
+    return (/^[A-Za-z\s]{1,}[\,]{0,1}[A-Za-z\s]{0,}$/.test(attribute))
 }
 
 
