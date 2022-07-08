@@ -4,89 +4,69 @@ const bookModel = require("../models/bookModel")
 let decodedToken;
 
 const isValidObjectId = (ObjectId) => {
-    return mongoose.Types.ObjectId.isValid(ObjectId);   // to validate a MongoDB ObjectId we are use .isValid() method on ObjectId
+  return mongoose.Types.ObjectId.isValid(ObjectId);   // to validate a MongoDB ObjectId we are use .isValid() method on ObjectId
 };
 
 /****************************************(Authentication)*****************************************************/
 const authentication = async function (req, res, next) {
-    try {
-        let token = req.headers["x-api-key"] || req.headers["x-Api-key"];
+  try {
+    let token = req.headers["x-api-key"] || req.headers["x-Api-key"];
 
-        if (!token) return res.status(401).send({ status: false, message: "Missing authentication token in request" });
+    if (!token) return res.status(401).send({ status: false, message: "Missing authentication token in request" });
 
 
-         decodedToken = jwt.verify(token, "Book-Management")
+    decodedToken = jwt.verify(token, "Book-Management")
 
-        next();
 
-    } catch (error) {
-        if (error.message == 'invalid token') return res.status(400).send({ status: false, msg: "invalid token" });
+    req.decodedToken = decodedToken;
 
-        if (error.message == "jwt expired") return res.status(400).send({ status: false, msg: "Token expired" });
+    next();
 
-        if (error.message == "invalid signature") return res.status(401).send({ status: false, msg: "invalid signature" });
+  } catch (error) {
+    if (error.message == 'invalid token') return res.status(400).send({ status: false, msg: "invalid token" });
 
-        return res.status(500).send({ status: false, message: error.message });
-    }
+    if (error.message == "jwt expired") return res.status(400).send({ status: false, msg: "Token expired" });
+
+    if (error.message == "invalid signature") return res.status(401).send({ status: false, msg: "invalid signature" });
+
+    return res.status(500).send({ status: false, message: error.message });
+  }
 };
 
 
-  
-  /*********************************************(Authorization)***************************************************** */
-  const authorise = async function (req, res, next) {
-    try {
-  
-      let loginAuthor = decodedToken.userId;
-  
-      let userLogging;
-  
-  
-  
-      /**validation for path params */
-      if (req.params.hasOwnProperty('bookId')) {
-        if (!isValidObjectId(req.params.bookId))                //checking the boolean value
-          return res.status(400).send({ status: false, msg: "Enter a valid blog Id" }) 
-  
-        let bookData = await bookModel.findById(req.params.bookId);        
-  
-        if (!bookData)                                          //you entering the author id here of any othor author
-          return res.status(404).send({ status: false, msg: "Error, Please check Id and try again" });
-  
-        userLogging = bookData.userId.toString();
-    
-  
-      }
-  
-      /**validation for query params */
-    //   if (req.query.hasOwnProperty('authorId')) {                //if authorId is present in request query
-  
-    //       if (!isValidObjectId(req.query.authorId))                //checking the boolean value
-    //       return res.status(400).send({ status: false, msg: "Enter a valid author Id" })
-  
-    //     let blogData = await blogModel.findOne({ authorId: req.query.authorId });
-    //     if (!blogData)                                             //this error shows by entering blogId
-    //       return res.status(404).send({ status: false, msg: "Error, Please check Id and try again" });
-  
-    //     userLogging = blogData.authorId.toString();
-    //     //getting authorId from blog data using authorId,converting it to string
-    //   }
-    //  if (!userLogging)                                                                //query needs this authorId
-    //     return res.status(400).send({ status: false, msg: "AuthorId is required" });  //it valids specially for query params
-  
-  
-  
-  
-      if (loginAuthor !== userLogging)
-        return res.status(403).send({ status: false, msg: "Error, authorization failed" });
-        
-        next()
-    
-      } 
-      catch (err) {
-       res.status(500).send({ status: false ,message: err.msg })
-    }
-   
-  }
-  
 
-module.exports = { authentication,authorise }
+/*********************************************(Authorization)***************************************************** */
+const authorise = async function (req, res, next) {
+  try {
+
+    let loginAuthor = decodedToken.userId;
+
+    let userLogging;
+
+    /**validation for path params */
+    if (req.params.hasOwnProperty('bookId')) {
+      if (!isValidObjectId(req.params.bookId))                //checking the boolean value
+        return res.status(400).send({ status: false, msg: "Enter a valid blog Id" })
+
+      let bookData = await bookModel.findById(req.params.bookId);
+
+      if (!bookData)                                          //you entering the author id here of any othor author
+        return res.status(404).send({ status: false, msg: "Error, Please check Id and try again" });
+
+      userLogging = bookData.userId.toString();
+    }
+
+    if (loginAuthor !== userLogging)
+      return res.status(403).send({ status: false, message: "Error, authorization failed" });
+
+    next()
+
+  }
+  catch (err) {
+    res.status(500).send({ status: false, message: err.msg })
+  }
+
+}
+
+
+module.exports = { authentication, authorise }

@@ -9,6 +9,7 @@ const validator = require("../validator/validate")
 const createBook = async function (req, res) {
     try {
         let requestBody = req.body
+        let validUserId = req.decodedToken.userId
         let { title, excerpt, ISBN, category, reviews, subcategory, releasedAt, userId, isDeleted } = requestBody;
 
 
@@ -30,6 +31,7 @@ const createBook = async function (req, res) {
         }
         let checkUser = await userModel.findById(userId);
         if (!checkUser) return res.status(404).send({ status: false, message: "author is not found" });
+        if(requestBody.userId !=validUserId ) return res.status(403).send({ status: false, message: "Error, authorization failed" });
 
         //ISBN
         if (!validator.valid(ISBN)) return res.status(400).send({ status: false, message: "ISBN number is required...!" })
