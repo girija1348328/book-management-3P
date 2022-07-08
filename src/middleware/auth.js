@@ -1,7 +1,7 @@
 let jwt = require("jsonwebtoken")
 const mongoose = require('mongoose');
 const blogModel = require("../models/blogModel")
-let decodedToken;
+
 
 const isValidObjectId = (ObjectId) => {
     return mongoose.Types.ObjectId.isValid(ObjectId);   // to validate a MongoDB ObjectId we are use .isValid() method on ObjectId

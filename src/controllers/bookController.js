@@ -99,7 +99,52 @@ const getBooks = async function (req, res) {
     }
 };
 
-module.exports = { createBook, getBooks }
 
 
+
+
+const getBooksById = async function (req, res){
+
+    try {
+
+        let filter = req.params.bookId
+        
+        
+        let checkBookName = await bookModel.findOne({ _id: filter.BookId, isDeleted: false }) /*Check book Name From DB*/
+        if (!checkBookName) return res.status(404).send({ status: true, msg: "No such book Name found", });
+    
+        
+        let getReviewData = await reviewModel.find({ bookId: bookId, isDeleted: false }).select({ bookId: 1, reviewedBy: 1, reviewedAt: 1 ,rating:1,review:1})
+        if (!getReviewData.length) return res.status(404).send({ status: false, msg: "No intern Apply for This College", });
+    
+        //assign value
+        let title = checkBookName.title;
+        let excerpt = checkBookName.excerpt;
+        let category = checkBookName.category;
+        let subcategory = checkBookName.subcategory;
+        let isDeleted = checkBookName.isDeleted;
+        let reviews = checkBookName.reviews;
+        let releasedAt = checkBookName.releasedAt;
+
+        //call value
+         let bookData = {
+            title: title,
+            excerpt: excerpt,
+            category: category,
+            subcategory:subcategory,
+            isDeleted:isDeleted,
+            reviews:reviews,
+            releasedAt:releasedAt,
+            reviewsData: getReviewData
+        }
+    
+        res.status(200).send({ status: true, msg: "Books list", data: bookData });
+      } catch (err) {
+        res.status(500).send({ status: false, msg: err.message });
+      }
+    };
+    
+
+
+module.exports = { createBook, getBooks,getBooksById }
 //or operator 
