@@ -13,6 +13,10 @@ const valid = function (value) {
     return true
 }
 
+let isValidTitle = function (title) {
+    return ["Mr", "Mrs", "Miss"].indexOf(title) !== -1
+}
+
 const isValidObjectId = (ObjectId) => {
     return mongoose.Types.ObjectId.isValid(ObjectId);   // to validate a MongoDB ObjectId we are use .isValid() method on ObjectId
 };
@@ -28,10 +32,6 @@ const isValidPassword = function (value) {
     if (/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,15}$/.test(value)) { return true }
     else return false
 }
-let isValidTitle = function (title) {
-    return ["Mr", "Mrs", "Miss"].indexOf(title) !== -1
-}
-
 
 const moblieRegex = function (mobile) {
     let regex = /^(?:(?:\+|0{0,2})91(\s*|[\-])?|[0]?)?([6789]\d{2}([ -]?)\d{3}([ -]?)\d{4})$/
@@ -52,7 +52,7 @@ let regexSpaceChar = function (attribute) {
 }
 
 
-module.exports = { isValidRequestBody, valid, isbnRegex, isREgexName, regexSpaceChar, isValidObjectId, isValidEmail, isValidPassword,isValidTitle, moblieRegex }
+module.exports = { isValidRequestBody, valid,isValidTitle, isbnRegex, isREgexName, regexSpaceChar, isValidObjectId, isValidEmail, isValidPassword, moblieRegex }
 
 
 

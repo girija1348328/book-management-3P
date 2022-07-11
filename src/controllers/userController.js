@@ -7,10 +7,11 @@ const jwt = require("jsonwebtoken");
 const createUser = async function (req, res) {
     try {
         let data = req.body
+        let address = data.address
         if(!validator.isValidRequestBody(data) ) return res.status(400).send({ status: false, message: "data in request body is required" }); 
+        
         //title
         if (!data.title) return res.status(400).send({ status: false, message: "title is required" });
-
         if (!validator.isValidTitle(data.title)) {
             return res.status(400).send({ status: false, message: "Invalid request parameters in the title, It should be Mr, Mrs, Miss" })
         }
@@ -42,6 +43,7 @@ const createUser = async function (req, res) {
 
         //address
         if (!(data.address.street)) return res.status(400).send({ status: false, message: "address is required" });
+        //if (address.keys(street)==0)return res.status(400).send({ status: false, message: "address should not be empty" });
         if (!validator.isREgexName(data.address.city)) return res.status(400).send({ status: false, message: "enter city name in valid format" });
         if (!/^\d{6}$/.test(data.address.pincode))
             return res.status(400).send({ status: false, message: "only six number is accepted in pincode " });
@@ -92,6 +94,4 @@ const logIn = async function (req, res) {
 
 
 
-
-module.exports.logIn = logIn
-module.exports.createUser = createUser
+module.exports= {logIn,createUser}
