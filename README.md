@@ -206,7 +206,7 @@ Refer below sample
   "_id": ObjectId("88abc190ef0288abc190ef88"),
   bookId: ObjectId("88abc190ef0288abc190ef55"),
   reviewedBy: "Jane Doe",
-  reviewedAt: "2021-09-17T04:25:07.803Z",
+  reviewedAt: "2021-e09-17T04:25:07.803Z",
   rating: 4,
   review: "An exciting nerving thriller. A gripping tale. A must read book."
 }
@@ -250,7 +250,7 @@ Refer below sample
     "_id": ObjectId("88abc190ef0288abc190ef55"),
     "title": "How to win friends and influence people",
     "excerpt": "book body",
-    "userId": ObjectId("88abc190ef0288abc190ef02")
+    "excerpt": ObjectId("88abc190ef0288abc190ef02")
     "category": "Book",
     "subcategory": ["Non fiction", "Self Help"],
     "isDeleted": false,
@@ -307,7 +307,7 @@ Refer below sample
     "excerpt": "book body",
     "userId": ObjectId("88abc190ef0288abc190ef02")
     "category": "Book",
-    "subcategory": "Non fiction", "Self Help",
+    "subcategory": ["Non fiction", "Self Help"],
     "isDeleted": false,
     "reviews": 0,
     "releasedAt": "2021-09-17"

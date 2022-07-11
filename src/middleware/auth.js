@@ -14,13 +14,13 @@ const authentication = async function (req, res, next) {
 
     if (!token) return res.status(401).send({ status: false, message: "Missing authentication token in request" });
 
+         decodedToken = jwt.verify(token, "Book-Management")
 
-    decodedToken = jwt.verify(token, "Book-Management")
+         req.decodedToken = decodedToken
 
+        next();
 
-    req.decodedToken = decodedToken;
-
-    next();
+   
 
   } catch (error) {
     if (error.message == 'invalid token') return res.status(400).send({ status: false, message: "invalid token" });
@@ -34,6 +34,7 @@ const authentication = async function (req, res, next) {
 };
 
 
+<<<<<<< HEAD
 
 /*********************************************(Authorization)***************************************************** */
 const authorise = async function (req, res, next) {
@@ -54,19 +55,43 @@ const authorise = async function (req, res, next) {
         return res.status(404).send({ status: false, message: "Error, Please check Id and try again" });
 
       userLogging = bookData.userId.toString();
+=======
+  
+  /*********************************************(Authorization)***************************************************** */
+  const authorise = async function (req, res, next) {
+    try {
+  
+      let loginAuthor = decodedToken.userId;
+  
+      let userLogging;
+  
+  
+  
+      /**validation for path params */
+      if (req.params.hasOwnProperty('bookId')) {
+        if (!isValidObjectId(req.params.bookId))return res.status(400).send({ status: false, msg: "Enter a valid blog Id" }) 
+  
+        let bookData = await bookModel.findById(req.params.bookId);        
+  
+        if (!bookData)                                          //you entering the author id here of any othor author
+          return res.status(404).send({ status: false, msg: "Error, Please check Id and try again" });
+  
+        userLogging = bookData.userId.toString();
+    
+  
+      }
+  
+       if (loginAuthor !== userLogging)
+        return res.status(403).send({ status: false, msg: "Error, authorization failed" });
+        
+        next()
+    
+      } 
+      catch (err) {
+       res.status(500).send({ status: false ,message: err.msg })
+>>>>>>> c1d6f22857aad9aaf614475d80598fdf754ec904
     }
-
-    if (loginAuthor !== userLogging)
-      return res.status(403).send({ status: false, message: "Error, authorization failed" });
-
-    next()
-
+   
   }
-  catch (err) {
-    res.status(500).send({ status: false, message: err.msg })
-  }
-
-}
-
-
+  
 module.exports = { authentication, authorise }
