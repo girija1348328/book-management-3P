@@ -23,11 +23,11 @@ const authentication = async function (req, res, next) {
     next();
 
   } catch (error) {
-    if (error.message == 'invalid token') return res.status(400).send({ status: false, msg: "invalid token" });
+    if (error.message == 'invalid token') return res.status(400).send({ status: false, message: "invalid token" });
 
-    if (error.message == "jwt expired") return res.status(400).send({ status: false, msg: "Token expired" });
+    if (error.message == "jwt expired") return res.status(400).send({ status: false, message: "please login one more time, token is expired" });
 
-    if (error.message == "invalid signature") return res.status(401).send({ status: false, msg: "invalid signature" });
+    if (error.message == "invalid signature") return res.status(401).send({ status: false, message: "invalid signature" });
 
     return res.status(500).send({ status: false, message: error.message });
   }
@@ -46,12 +46,12 @@ const authorise = async function (req, res, next) {
     /**validation for path params */
     if (req.params.hasOwnProperty('bookId')) {
       if (!isValidObjectId(req.params.bookId))                //checking the boolean value
-        return res.status(400).send({ status: false, msg: "Enter a valid blog Id" })
+        return res.status(400).send({ status: false, message: "Enter a valid blog Id" })
 
       let bookData = await bookModel.findById(req.params.bookId);
 
       if (!bookData)                                          //you entering the author id here of any othor author
-        return res.status(404).send({ status: false, msg: "Error, Please check Id and try again" });
+        return res.status(404).send({ status: false, message: "Error, Please check Id and try again" });
 
       userLogging = bookData.userId.toString();
     }

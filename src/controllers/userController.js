@@ -41,7 +41,7 @@ const createUser = async function (req, res) {
         if (!validator.isValidPassword(data.password)) return res.status(400).send({ status: false, message: `Password should be 8 to 15 characters which contain at least one numeric digit, one uppercase and one lowercase letter` })
 
         //address
-        if (!(data.address.street)) return res.status(400).send({ status: false, message: "address is required" });
+        if ( !data.address.street) return res.status(400).send({ status: false, message: "address is required" });
         if (!validator.isREgexName(data.address.city)) return res.status(400).send({ status: false, message: "enter city name in valid format" });
         if (!/^\d{6}$/.test(data.address.pincode))
             return res.status(400).send({ status: false, message: "only six number is accepted in pincode " });

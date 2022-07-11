@@ -208,10 +208,10 @@ const deleteBookByParam = async function (req, res) {
             let deleteBook = await bookModel.findOneAndUpdate(
                 { _id: bookId1 },
                 { $set: { isDeleted: true, deletedAt: new Date() } },
-                { new: true }
+                // { new: true }
             );
 
-            return res.status(201).send({ status: true, data: deleteBook })
+            return res.status(200).send({ status: true,  message: "Deleted suceefully...!" })
 
         }
 
