@@ -34,30 +34,8 @@ const authentication = async function (req, res, next) {
 };
 
 
-<<<<<<< HEAD
-
-/*********************************************(Authorization)***************************************************** */
-const authorise = async function (req, res, next) {
-  try {
-
-    let loginAuthor = decodedToken.userId;
-
-    let userLogging;
-
-    /**validation for path params */
-    if (req.params.hasOwnProperty('bookId')) {
-      if (!isValidObjectId(req.params.bookId))                //checking the boolean value
-        return res.status(400).send({ status: false, message: "Enter a valid blog Id" })
-
-      let bookData = await bookModel.findById(req.params.bookId);
-
-      if (!bookData)                                          //you entering the author id here of any othor author
-        return res.status(404).send({ status: false, message: "Error, Please check Id and try again" });
-
-      userLogging = bookData.userId.toString();
-=======
   
-  /*********************************************(Authorization)***************************************************** */
+  /*********************************************(Authorization)************************************************ */
   const authorise = async function (req, res, next) {
     try {
   
@@ -89,7 +67,6 @@ const authorise = async function (req, res, next) {
       } 
       catch (err) {
        res.status(500).send({ status: false ,message: err.msg })
->>>>>>> c1d6f22857aad9aaf614475d80598fdf754ec904
     }
    
   }

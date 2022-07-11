@@ -204,11 +204,7 @@ const deleteBookByParam = async function (req, res) {
                 // { new: true }
             );
 
-<<<<<<< HEAD
             return res.status(200).send({ status: true,  message: "Deleted suceefully...!" })
-=======
-            return res.status(200).send({ status: true, message: "deleted succesfully" })
->>>>>>> c1d6f22857aad9aaf614475d80598fdf754ec904
 
         }
 
