@@ -21,6 +21,6 @@ router.get("/books/:bookId",middleware.authentication,bookController.getBooksByI
 router.delete("/books/:bookId",middleware.authentication,middleware.authorise,bookController.deleteBookByParam)
 
 router.post("/books/:bookId/review", reviewController.createReview )
-router.put("/books/:bookId/review/:reviewId", reviewController.updateReview)
-
+router.put("/books/:bookId/review/:reviewId", reviewController.updateReview)  
+router.delete("/books/:bookId/review/:reviewId", reviewController.deleteBookByParam) 
 module.exports = router;
