@@ -14,22 +14,23 @@ const createReview = async function (req, res) {
 
         if (!validator.isValidRequestBody(requestBody)) return res.status(400).send({ status: false, message: "Please, provide book details to create book...!" })
 
-        if (bookId == undefined) return res.status(400).send({ status: false, message: "Please, provide bookId...!" })
+
         if (!validator.isValidObjectId(bookId)) return res.status(400).send({ status: false, message: "Please,enter valid bookId....!" })
 
-
-
-
         //bookId
-        let checkBook = await bookModel.findOne({ _id: bookId, isDeleted: false });
-        if (!checkBook) return res.status(404).send({ status: false, message: "No such book found...!" })
+        let checkBook = await bookModel.findOne({ _id: bookId });
+        if (checkBook.isDeleted == true) return res.status(400).send({ status: false, message: "Book is deleted...!" })
+        // if (!checkBook) return res.status(404).send({ status: false, message: "No such book found...!" })
 
         //reviewBy
-        if (!validator.valid(reviewedBy) || !validator.regexSpaceChar(reviewedBy)) return res.status(400).send({ status: false, message: "reviewedBy name is not valid format...!" });
+        if (!validator.regexSpaceChar(reviewedBy)) return res.status(400).send({ status: false, message: "reviewedBy name is not valid format...!" });
 
         //rating
         if (!Number.isInteger(rating)) return res.status(400).send({ status: false, message: "rating should be integer" })
-        if (!(/[1-5]/.test(rating))) return res.status(400).send({ status: false, message: "rating should be 1-5" })
+
+        if (!(rating >= 1 && rating <= 5)) return res.status(400).send({ status: false, message: "Rating should be inbetween 1-5 " });
+
+
 
         if (!validator.valid(review) || !validator.regexSpaceChar(review)) return res.status(400).send({ status: false, message: "review name is not valid format...!" });
 
@@ -63,7 +64,8 @@ const updateReview = async function (req, res) {
         //check book
         let bookId = req.params.bookId;
         if (!validator.isValidObjectId(bookId)) return res.status(400).send({ status: false, message: "Please enter valid bookId...!" })
-        const bookExist = await bookModel.findOne({ _id: bookId, isDeleted: false })
+        const bookExist = await bookModel.findOne({ _id: bookId, isDeleted: false }).select({ deletedAt: 0, __v: 0, ISBN: 0 }).lean(); //With the Mongoose lean() method, the documents are returned as plain objects.
+
         if (!bookExist) return res.status(404).send({ status: false, message: "No such book found...!" });
 
         //check review
@@ -85,21 +87,23 @@ const updateReview = async function (req, res) {
         if (!validator.regexSpaceChar(reviewedBy)) return res.status(400).send({ status: false, message: "reviewedBy name is not valid format...!" });
 
         if (!Number.isInteger(rating)) return res.status(400).send({ status: false, message: "rating rating should be integer" })
-        if (!(/[1-5]/.test(rating))) return res.status(400).send({ status: false, message: "rating should be 1-5" })
-
+        if (!(rating >= 1 && rating <= 5)) return res.status(400).send({ status: false, message: "Rating should be inbetween 1-5 " });
         if (!validator.regexSpaceChar(review)) return res.status(400).send({ status: false, message: "review name is not valid format...!" });
 
 
         //update review
-        let updatedReview = await reviewModel.findOneAndUpdate({ _id: reviewId, bookId: bookId, isDeleted: false }, requestBody, { new: true }) //.select({isDeleted:0, __v:0})
+        let updatedReview = await reviewModel.findOneAndUpdate({ _id: reviewId, bookId: bookId, isDeleted: false }, requestBody, { new: true }).select({ isDeleted: 0, __v: 0 })
 
-        return res.status(200).send({ status: true, message: "Updated Successfully", data: updatedReview })
+        bookExist.reviewsData = updatedReview;
+
+        return res.status(200).send({ status: true, message: "Updated Successfully", data: bookExist })
 
 
     } catch (err) {
         return res.status(500).send({ status: false, message: err.message })
     }
 }
+
 
 
 const deleteBookByParam = async function (req, res) {
@@ -115,8 +119,9 @@ const deleteBookByParam = async function (req, res) {
         let reviewId = req.params.reviewId;
 
         if (!validator.isValidObjectId(reviewId)) return res.status(400).send({ status: false, message: "enter valid reviewId...!" })
+
         //DB call
-        const reviewExist = await reviewModel.findOne({ _id: reviewId })
+        const reviewExist = await reviewModel.findOne({ _id: reviewId, bookId: bookId })
         if (!reviewExist) return res.status(404).send({ status: false, message: "review not found...!" })
 
 
@@ -140,7 +145,6 @@ const deleteBookByParam = async function (req, res) {
     }
 
 }
-
 
 
 module.exports = { createReview, updateReview, deleteBookByParam }

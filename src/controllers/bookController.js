@@ -18,7 +18,7 @@ const createBook = async function (req, res) {
         //title
         if (!validator.valid(title) || !validator.regexSpaceChar(title)) return res.status(400).send({ status: false, message: "book title is required in valid format...!" });
         let checkTitle = await bookModel.findOne({ title: title });
-        if (checkTitle) return res.status(400).send({ status: false, message: " Book is already exist" })
+        if (checkTitle) return res.status(400).send({ status: false, message: " Book title is already exist" })
 
         //excerpt
         if (!validator.valid(excerpt)) return res.status(400).send({ status: false, message: "excerpt is required...!" })
@@ -204,7 +204,7 @@ const deleteBookByParam = async function (req, res) {
                 // { new: true }
             );
 
-            return res.status(200).send({ status: true,  message: "Deleted suceefully...!" })
+            return res.status(200).send({ status: true, message: "Deleted suceefully...!" })
 
         }
 

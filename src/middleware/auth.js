@@ -47,7 +47,7 @@ const authentication = async function (req, res, next) {
   
       /**validation for path params */
       if (req.params.hasOwnProperty('bookId')) {
-        if (!isValidObjectId(req.params.bookId))return res.status(400).send({ status: false, msg: "Enter a valid blog Id" }) 
+        if (!isValidObjectId(req.params.bookId))return res.status(400).send({ status: false, msg: "Enter a valid book Id" }) 
   
         let bookData = await bookModel.findById(req.params.bookId);        
   
