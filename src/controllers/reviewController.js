@@ -74,7 +74,7 @@ const updateReview = async function (req, res) {
 
         //request body
         if (!validator.regexSpaceChar(reviewedBy)) return res.status(400).send({ status: false, message: "reviewedBy name is not valid format...!" });
-        if (!Number.isInteger(rating)) return res.status(400).send({ status: false, message: "rating rating should be integer" })
+        if (!Number.isInteger(rating)) return res.status(400).send({ status: false, message: "rating should be integer" })
         if (!(rating >= 1 && rating <= 5)) return res.status(400).send({ status: false, message: "Rating should be inbetween 1-5 " });
         if (!validator.regexSpaceChar(review)) return res.status(400).send({ status: false, message: "review name is not valid format...!" });
 
