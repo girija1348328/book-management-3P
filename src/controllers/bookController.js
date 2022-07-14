@@ -20,7 +20,7 @@ let uploadFile= async ( file) =>{
     var uploadParams= {
         ACL: "public-read",
         Bucket: "classroom-training-bucket",  //HERE
-        Key: "disha/" + file.originalname, //HERE 
+        Key: "Girija/" + file.originalname, //HERE 
         Body: file.buffer
     }
 
@@ -32,6 +32,7 @@ let uploadFile= async ( file) =>{
         console.log(data)
         console.log("file uploaded succesfully")
         return resolve(data.Location)
+        
     })
 
     // let data= await s3.upload( uploadParams)

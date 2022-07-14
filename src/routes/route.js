@@ -11,7 +11,7 @@ router.post("/register", userController.createUser)
 router.post("/login", userController.logIn)
 
 //books
-router.post("/write-file-aws",bookController.bookCover);
+router.post("/  ",bookController.bookCover);
 router.post("/books", middleware.authentication,bookController.createBook) 
 router.get("/books", middleware.authentication,bookController.getBooks)
 router.get("/books/:bookId",middleware.authentication,bookController.getBooksById)
